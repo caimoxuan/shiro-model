@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmx.test.dao.SysRolesPermissionsDao">
+	<sql id = "selectId">
+		role_id,
+		permission_id
+	</sql>
+
+	<select id = "query" resultType = "SysRolesPermissions" parameterType = "java.util.HashMap">
+		select <include refid = "selectId" />
+		from sys_roles_permissions 
+		<where>
+			<if test = "role_id != null">
+				AND role_id = #{role_id}
+			</if>
+			<if test = "permission_id != null">
+				AND permission_id = #{permission_id}
+			</if>
+		</where>
+	</select>
+
+	<insert id = "add" keyProperty = "id" parameterType = "SysRolesPermissions" useGeneratedKeys = "true">
+		insert into sys_roles_permissions(
+			role_id,
+			permission_id)
+		values(
+			#{role_id},
+			#{permission_id})
+	</insert>
+
+	<delete id = "delete" parameterType = "String">
+		delete from sys_roles_permissions where id = #{id}
+	</delete>
+
+	<update id = "modify" parameterType = "SysRolesPermissions">
+		update sys_roles_permissions
+		<set>
+			<if test = "role_id != null">
+				role_id = #{role_id},
+			</if>
+			<if test = "permission_id != null">
+				permission_id = #{permission_id}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id = "getById" parameterType = "String" resultType = "SysRolesPermissions">
+		select <include refid = "selectId" />
+		from sys_roles_permissions
+		where
+		id = #{id}
+	</select>
+
+</mapper>

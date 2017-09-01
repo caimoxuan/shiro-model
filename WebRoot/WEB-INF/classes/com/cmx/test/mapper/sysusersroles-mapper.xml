@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmx.test.dao.SysUsersRolesDao">
+	<sql id = "selectId">
+		user_id,
+		role_id
+	</sql>
+
+	<select id = "query" resultType = "SysUsersRoles" parameterType = "java.util.HashMap">
+		select <include refid = "selectId" />
+		from sys_users_roles 
+		<where>
+			<if test = "user_id != null">
+				AND user_id = #{user_id}
+			</if>
+			<if test = "role_id != null">
+				AND role_id = #{role_id}
+			</if>
+		</where>
+	</select>
+
+	<insert id = "add" keyProperty = "id" parameterType = "SysUsersRoles" useGeneratedKeys = "true">
+		insert into sys_users_roles(
+			user_id,
+			role_id)
+		values(
+			#{user_id},
+			#{role_id})
+	</insert>
+
+	<delete id = "delete" parameterType = "String">
+		delete from sys_users_roles where id = #{id}
+	</delete>
+
+	<update id = "modify" parameterType = "SysUsersRoles">
+		update sys_users_roles
+		<set>
+			<if test = "user_id != null">
+				user_id = #{user_id},
+			</if>
+			<if test = "role_id != null">
+				role_id = #{role_id}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id = "getById" parameterType = "String" resultType = "SysUsersRoles">
+		select <include refid = "selectId" />
+		from sys_users_roles
+		where
+		id = #{id}
+	</select>
+
+</mapper>

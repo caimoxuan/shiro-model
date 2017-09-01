@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmx.test.dao.SysRolesDao">
+	<sql id = "selectId">
+		id,
+		role,
+		description,
+		available
+	</sql>
+
+	<select id = "query" resultType = "SysRoles" parameterType = "java.util.HashMap">
+		select <include refid = "selectId" />
+		from sys_roles 
+		<where>
+			<if test = "id != null">
+				AND id = #{id}
+			</if>
+			<if test = "role != null">
+				AND role = #{role}
+			</if>
+			<if test = "description != null">
+				AND description = #{description}
+			</if>
+			<if test = "available != null">
+				AND available = #{available}
+			</if>
+		</where>
+	</select>
+
+	<insert id = "add" keyProperty = "id" parameterType = "SysRoles" useGeneratedKeys = "true">
+		insert into sys_roles(
+			id,
+			role,
+			description,
+			available)
+		values(
+			#{id},
+			#{role},
+			#{description},
+			#{available})
+	</insert>
+
+	<delete id = "delete" parameterType = "String">
+		delete from sys_roles where id = #{id}
+	</delete>
+
+	<update id = "modify" parameterType = "SysRoles">
+		update sys_roles
+		<set>
+			<if test = "id != null">
+				id = #{id},
+			</if>
+			<if test = "role != null">
+				role = #{role},
+			</if>
+			<if test = "description != null">
+				description = #{description},
+			</if>
+			<if test = "available != null">
+				available = #{available}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id = "getById" parameterType = "String" resultType = "SysRoles">
+		select <include refid = "selectId" />
+		from sys_roles
+		where
+		id = #{id}
+	</select>
+
+</mapper>

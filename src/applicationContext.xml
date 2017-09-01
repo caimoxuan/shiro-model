@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+		"
+		>
+
+
+	<context:component-scan base-package="com.cmx.test.*" />
+
+	<bean class = "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name = "locations">
+			<list>
+				<value>
+					classpath:jdbc.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id = "dataSource" class = "com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 基本连接配置 -->
+		<property name = "url" value = "${url}" />
+		<property name = "username" value = "${username}" />
+		<property name = "password" value = "${password}" />
+		<!-- 连接配置 -->
+		<property name = "initialSize" value = "${druid.initialSize}" />
+		<!-- 最小空闲连接数 -->
+		<property name = "minIdle" value = "${druid.minIdle}" />
+		<property name = "maxActive" value = "${druid.maxActive}" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name = "timeBetweenEvictionRunsMillis" value ="${druid.timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name = "minEvictableIdleTimeMillis" value ="${druid.minEvictableIdleTimeMillis}" />
+		<property name = "validationQuery" value = "${druid.validationQuery}" />
+		<property name = "testWhileIdle" value = "${druid.testWhileIdle}" />
+		<property name = "testOnBorrow" value = "${druid.testOnBorrow}" />
+		<property name = "testOnReturn" value = "${druid.testOnReturn}" />
+		<property name = "maxOpenPreparedStatements" value ="${druid.maxOpenPreparedStatements}" />
+		<!-- 打开 removeAbandoned 功能 -->
+		<property name = "removeAbandoned" value = "${druid.removeAbandoned}" />
+		<!-- 1800 秒，也就是 30 分钟 -->
+		<property name = "removeAbandonedTimeout" value ="${druid.removeAbandonedTimeout}" />
+		<!-- 关闭 abanded 连接时输出错误日志 -->
+		<property name = "logAbandoned" value = "${druid.logAbandoned}" />
+		<!-- 默认使用wall和stat filter (默认关闭batch操作)  开启时 配置wall 的 multiStatementAllow为true-->
+		<property name = "filters" value = "${druid.filters}" />
+	</bean>
+
+	<!-- mybtis-spring -->
+	<bean id = "sqlSessionFactory" class = "org.mybatis.spring.SqlSessionFactoryBean">
+		<property name = "dataSource" ref = "dataSource" />
+		<property name = "configLocation" value = "classpath:mybatis.xml" />
+		<property name = "mapperLocations" value = "classpath:com/cmx/test/mapper/*.xml" />
+	</bean>
+	<!-- 自动实现daoimpl -->
+	<bean id="zcMapperScannerConfigurer" name="zcMapperScannerConfigurer" class = "org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value = "com.cmx.test.dao"></property>
+		<property name="sqlSessionFactoryBeanName" value = "sqlSessionFactory"></property>
+	</bean>
+
+	<bean id = "transactionManager" class = "org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name = "dataSource" ref = "dataSource" />
+	</bean>
+
+
+	<aop:config>
+		<aop:pointcut expression="execution(public * com.cmx.test.service.impl.*Impl.*(..))" id = "pointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+	</aop:config>
+	<tx:advice id = "txAdvice" transaction-manager = "transactionManager" >
+		<tx:attributes>
+			<tx:method name="delete*" propagation = "REQUIRED" rollback-for = "java.lan.Exception"/>
+			<tx:method name="update*" propagation = "REQUIRED" rollback-for = "java.lan.Exception"/>
+			<tx:method name="insert*" propagation = "REQUIRED" rollback-for = "java.lan.Exception"/>
+			<tx:method name="select*" propagation = "SUPPORTS"  read-only = "true"/>
+			<tx:method name="get*" propagation = "SUPPORTS" read-only = "true"/>
+		</tx:attributes>
+	</tx:advice>
+
+	
+	<import resource = "classpath:shiro-spring.xml" />
+	
+</beans>
