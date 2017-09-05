@@ -14,6 +14,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	logSuccess
+  	logSuccess<a href = "<%=path %>/user.html">查看用户</a>
   </body>
 </html>

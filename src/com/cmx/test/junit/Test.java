@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.cmx.test.entity.SysUsers;
