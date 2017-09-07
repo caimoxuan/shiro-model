@@ -21,7 +21,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	  			</td>
 	  		</tr>
 	  	</table>
+  
+  		<a href = "<%=path %>/logout" style="width:60px;height:30px;background:#fff;">退出登录</a>
   </body>
+  
+  
   
   <script type = "text/javascript">
 function ajax() {

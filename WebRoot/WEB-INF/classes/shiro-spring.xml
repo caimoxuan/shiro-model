@@ -15,6 +15,7 @@
        
       <!-- 凭证匹配器 -->
       <bean id = "credentialsMatcher" class="com.cmx.test.shiro.credential.LimitHashedCredential">
+      	<constructor-arg name="cacheManager" ref="cacheManager"/>
       	<property name="hashAlgorithmName" value="md5" />
 		<property name="hashIterations" value="1" />
 		<property name="storedCredentialsHexEncoded" value="true" />
@@ -96,7 +97,8 @@
 		        </util:map>  
 		    </property>  
 		    <property name="filterChainDefinitions">  
-		        <value>  
+		        <value>
+		        	/assets/** =anon  
 		            /index.jsp = anon  
 		            /unauthorized.jsp = anon  
 		            /login/login.html = authc  

@@ -23,6 +23,8 @@
 	 
 
 	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<mvc:resources location="/assets/" mapping="/assets/**" cache-period="3600"/>
 	<!--jsp 视图解析器  请在WEB-INF下创建jsp文件夹 否则请修改 perfix 配置 -->
 	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:order="2" >
 		<property name="prefix" value="/WEB-INF/jsp/" />

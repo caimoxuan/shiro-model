@@ -57,7 +57,7 @@ public class LoginController {
 		return "/login/login";
 	} 
 	
-	@RequestMapping("dologin")
+	@RequestMapping("/dologin")
 	public String dologin(HttpServletRequest request, HttpServletResponse response, Model model){
 		
 		String username = request.getParameter("username");
@@ -75,10 +75,6 @@ public class LoginController {
 		return "/login/login";
 	}
 	
-	@RequestMapping("/home")
-	public String home(){
-		System.out.println("home");
-		return "/home/home";
-	}
+	
 
 }
